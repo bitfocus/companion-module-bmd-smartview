@@ -197,7 +197,9 @@ function instance(system, id, config) {
 instance.prototype.updateConfig = function(config) {
 	var self = this;
 	self.config = config;
+
 	self.init_tcp();
+	self.actions(); // export actions
 };
 
 
@@ -292,7 +294,7 @@ instance.prototype.actions = function(system) {
 	if (self.config.ver == 'smScope') {
 		self.system.emit('instance_actions', self.id, self.SMARTSCOPE );
 	}
-	
+
 };
 
 	instance.prototype.action = function(action) {
