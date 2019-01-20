@@ -1,17 +1,20 @@
 {
-  "name": "bmd-smartview",
-  "version": "1.0.0",
+	"name": "bmd-smartview",
+	"version": "1.0.1",
 	"api_version": "1.0.0",
-	"keywords": [ "Scope", "Monitor" ],
+	"keywords": [
+		"Scope",
+		"Monitor"
+	],
 	"manufacturer": "Blackmagic Design",
 	"product": "SmartView/SmartScope",
 	"shortname": "smart",
 	"homepage": "https://www.blackmagicdesign.com/products/smartview",
-  "description": "Module to control Smartview and Smartscope line from Black magick design",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Per Roine <per.roine@gmail.com>",
-  "license": "MIT"
+	"description": "Module to control Smartview and Smartscope line from Black magick design",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Per Roine <per.roine@gmail.com>",
+	"license": "MIT"
 }
