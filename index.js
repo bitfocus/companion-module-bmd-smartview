@@ -336,15 +336,17 @@ class instance extends instance_skel {
 						this.sendNextCommand();
 					}
 					else if (line.match(/ACK/)) {
-						var echo = this.commandQueue.shift();
-						echo = echo.split('\n');
+						if (this.commandQueue.length > 0) {
+							var echo = this.commandQueue.shift();
+							echo = echo.split('\n');
 
-						if (echo.length > 1) {
-							var cmd = echo.shift().trim().split(/:/)[0];
-							this.processSmartviewInformation(cmd, echo);
+							if (echo.length > 1) {
+								var cmd = echo.shift().trim().split(/:/)[0];
+								this.processSmartviewInformation(cmd, echo);
+							}
+
+							this.sendNextCommand();
 						}
-
-						this.sendNextCommand();
 					}
 					else {
 						this.socket.emit('receiveline', line.toString());
@@ -551,32 +553,41 @@ class instance extends instance_skel {
 				case 'Brightness':
 					monitor.brightness = parseInt(value);
 					this.setVariable('mon_' + monitor.id + '_brightness', monitor.brightness);
+					this.checkFeedbacks('bright');
 					break;
 				case 'Contrast':
 					monitor.contrast = parseInt(value);
 					this.setVariable('mon_' + monitor.id + '_contrast', monitor.contrast);
+					this.checkFeedbacks('cont');
 					break;
 				case 'Saturation':
 					monitor.saturation = parseInt(value);
 					this.setVariable('mon_' + monitor.id + '_saturation', monitor.saturation);
+					this.checkFeedbacks('sat');
 					break;
 				case 'Border':
 					monitor.border = value;
+					this.checkFeedbacks('border');
 					break;
 				case 'ScopeMode':
 					monitor.scopeMode = value;
+					this.checkFeedbacks('scopeFunc');
 					break;
 				case 'AudioChannel':
 					monitor.audioChannel = value;
+					this.checkFeedbacks('audio');
 					break;
 				case 'LUT':
 					monitor.lut = value;
+					this.checkFeedbacks('lut');
 					break;
 				case 'MonitorInput':
 					monitor.monitorInput = value;
+					this.checkFeedbacks('input');
 					break;
 				case 'Identify':
 					monitor.identify = (value == 'true');
+					this.checkFeedbacks('ident');
 					break;
 			}
 		}
