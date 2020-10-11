@@ -17,11 +17,11 @@ module.exports = {
 		{ id: '7', label: 'Channels 15 and 16' }
 	],
 	CHOICES_COLORS: [
-		{ id: 'none',   label:'None'  },
-		{ id: 'red',    label:'Red'   },
-		{ id: 'green',  label:'Green' },
-		{ id: 'blue',   label:'Blue'  },
-		{ id: 'white',  label:'White' }
+		{ id: 'None',   label:'None'  },
+		{ id: 'Red',    label:'Red'   },
+		{ id: 'Green',  label:'Green' },
+		{ id: 'Blue',   label:'Blue'  },
+		{ id: 'White',  label:'White' }
 	],
 	CHOICES_INPUTS: [
 		{ id: 'SDI A',   label: 'SDI A'   },
