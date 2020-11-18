@@ -15,7 +15,6 @@ var log;
  * Companion instance class for the Blackmagic SmartView/SmartScope Monitors.
  *
  * @extends instance_skel
- * @version 1.1.0
  * @since 1.0.0
  * @author Per Roine <per.roine@gmail.com>
  * @author Keith Rocheck <keith.rocheck@gmail.com>
@@ -71,6 +70,8 @@ class instance extends instance_skel {
 			{ action: 'satUp',      group: 'Saturation', label: 'SATURATION\\nUP\\n\\n$(smart:_saturation)',   },
 			{ action: 'satDown',    group: 'Saturation', label: 'SATURATION\\nDOWN\\n\\n$(smart:_saturation)', }
 		];
+
+		this.setupFields();
 
 		this.actions(); // export actions
 	}
@@ -133,7 +134,7 @@ class instance extends instance_skel {
 				cmd = `${opt.mon}\nIdentify: true`;
 				break;
 			case 'border':
-				cmd = `${opt.mon}\nBorder: ${opt.col}`;
+				cmd = `${opt.mon}\nBorder: ${opt.val}`;
 				break;
 			case 'scopeFunc':
 				cmd = `${opt.mon}\nScopeMode: ${opt.val}`;
@@ -457,12 +458,106 @@ class instance extends instance_skel {
 			this.CHOICES_MONITOR = [{ id: 'MONITOR A:', label: 'Monitor A', preset: '', variable: 'mon_a_' }];
 		}
 
-		this.AUDIOCHANNEL_FIELD.choices = this.CHOICES_AUDIOCHANNELS;
-		this.COLOR_FIELD.choices        = this.CHOICES_COLORS;
-		this.INPUT_FIELD.choices        = this.CHOICES_INPUTS;
-		this.LUT_FIELD.choices          = this.CHOICES_LUTS;
 		this.MONITOR_FIELD.choices      = this.CHOICES_MONITOR;
-		this.SCOPETYPE_FIELD.choices    = this.CHOICES_SCOPETYPE;
+	}
+
+	/**
+	 * Set up the fields used in actions and feedbacks
+	 *
+	 * @access protected
+	 * @since 1.1.2
+	 */
+	setupFields() {
+		
+		this.BG_COLOR_FIELD = function(defaultColor) {
+			return {
+				type: 'colorpicker',
+				label: 'Background color',
+				id: 'bg',
+				default: defaultColor
+			};
+		};
+		this.FG_COLOR_FIELD = function(defaultColor) {
+			return {
+				type: 'colorpicker',
+				label: 'Foreground color',
+				id: 'fg',
+				default: defaultColor
+			};
+		};
+		this.AUDIOCHANNEL_FIELD = {
+			type:    'dropdown',
+			label:   'Channels',
+			id:      'val',
+			choices: this.CHOICES_AUDIOCHANNELS,
+			default: '0'
+		};
+		this.COLOR_FIELD = {
+			type:    'dropdown',
+			label:   'Color',
+			id:      'val',
+			choices: this.CHOICES_COLORS
+		};
+		this.DECREMENT_FIELD = {
+			type:    'number',
+			label:   'Decrement Amount (1-255)',
+			id:      'val',
+			min:      1,
+			max:      255,
+			default:  5,
+			required: true,
+			range:    false
+		};
+		this.INCREMENT_FIELD = {
+			type:    'number',
+			label:   'Increment Amount (1-255)',
+			id:      'val',
+			min:      1,
+			max:      255,
+			default:  5,
+			required: true,
+			range:    false
+		};
+		this.INPUT_FIELD = {
+			type:    'dropdown',
+			label:   'Input',
+			id:      'val',
+			choices: this.CHOICES_INPUTS,
+			default: 'SDI A'
+		};
+		this.LEVEL_FIELD = function(defaultLevel) {
+			return {
+				type:     'number',
+				label:    'Set the level 0-255',
+				id:       'val',
+				min:      0,
+				max:      255,
+				default:  defaultLevel,
+				required: true,
+				range:    true
+			};
+		};
+		this.LUT_FIELD = {
+			type:    'dropdown',
+			label:   'LUT',
+			id:      'val',
+			choices: this.CHOICES_LUTS,
+			default: 'NONE'
+		};
+		this.MONITOR_FIELD = {
+			type:    'dropdown',
+			label:   'Select Monitor',
+			id:      'mon',
+			choices: this.CHOICES_MONITOR,
+			default: 'MONITOR A:'
+		};
+		this.SCOPETYPE_FIELD = {
+			type:    'dropdown',
+			label:   'Function',
+			id:      'val',
+			choices: this.CHOICES_SCOPETYPE,
+			default: 'Picture'
+		};
 	}
 
 	/**

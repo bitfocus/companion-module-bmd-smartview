@@ -33,10 +33,6 @@ module.exports = {
 		{ id: '1',    label: 'LUT 2'   },
 		{ id: 'NONE', label: 'DISABLE' }
 	],
-	CHOICES_MONITOR: [
-		{ id: 'MONITOR A:', label: 'Monitor A', preset: 'MONITOR: A\\n', variable: 'mon_a_' },
-		{ id: 'MONITOR B:', label: 'Monitor B', preset: 'MONITOR: B\\n', variable: 'mon_b_' }
-	],
 	CHOICES_SCOPETYPE: [
 		{ id: 'Picture',       label: 'Picture'       },
 		{ id: 'WaveformLuma',  label: 'Waveform'      },
@@ -47,94 +43,5 @@ module.exports = {
 		{ id: 'Histogram',     label: 'Histogram'     },
 		{ id: 'AudioDbfs',     label: 'Audio dBFS'    },
 		{ id: 'AudioDbvu',     label: 'Audio dBVU'    }
-	],
-	BG_COLOR_FIELD: function(defaultColor) {
-		return {
-			type: 'colorpicker',
-			label: 'Background color',
-			id: 'bg',
-			default: defaultColor
-		};
-	},
-	FG_COLOR_FIELD: function(defaultColor) {
-		return {
-			type: 'colorpicker',
-			label: 'Foreground color',
-			id: 'fg',
-			default: defaultColor
-		};
-	},
-	AUDIOCHANNEL_FIELD: {
-		type:    'dropdown',
-		label:   'Channels',
-		id:      'val',
-		choices: this.CHOICES_AUDIOCHANNELS,
-		default: '0'
-	},
-	COLOR_FIELD: {
-		type:    'dropdown',
-		label:   'Color',
-		id:      'val',
-		choices: this.CHOICES_COLORS
-	},
-	DECREMENT_FIELD: {
-		type:    'number',
-		label:   'Decrement Amount (1-255)',
-		id:      'val',
-		min:      1,
-		max:      255,
-		default:  5,
-		required: true,
-		range:    false
-	},
-	INCREMENT_FIELD: {
-		type:    'number',
-		label:   'Increment Amount (1-255)',
-		id:      'val',
-		min:      1,
-		max:      255,
-		default:  5,
-		required: true,
-		range:    false
-	},
-	INPUT_FIELD: {
-		type:    'dropdown',
-		label:   'Input',
-		id:      'val',
-		choices: this.CHOICES_INPUTS,
-		default: 'SDI A'
-	},
-	LEVEL_FIELD: function(defaultLevel) {
-		return {
-			type:     'number',
-			label:    'Set the level 0-255',
-			id:       'val',
-			min:      0,
-			max:      255,
-			default:  defaultLevel,
-			required: true,
-			range:    true
-		};
-	},
-	LUT_FIELD: {
-		type:    'dropdown',
-		label:   'LUT',
-		id:      'val',
-		choices: this.CHOICES_LUTS,
-		default: 'NONE'
-	},
-	MONITOR_FIELD: {
-		type:    'dropdown',
-		label:   'Select Monitor',
-		id:      'mon',
-		choices: this.CHOICES_MONITOR,
-		default: 'MONITOR A:'
-	},
-	SCOPETYPE_FIELD: {
-		type:    'dropdown',
-		label:   'Function',
-		id:      'val',
-		choices: this.CHOICES_SCOPETYPE,
-		default: 'Picture'
-	}
+	]
 }
