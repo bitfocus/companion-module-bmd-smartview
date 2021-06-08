@@ -5,11 +5,8 @@ var actions       = require('./actions');
 var feedback      = require('./feedback');
 var presets       = require('./presets');
 var setup         = require('./setup');
-var upgrades      = require('./upgrades');
+var upgradeScripts= require('./upgrades');
 var variables     = require('./variables');
-
-var debug;
-var log;
 
 /**
  * Companion instance class for the Blackmagic SmartView/SmartScope Monitors.
@@ -45,10 +42,7 @@ class instance extends instance_skel {
 			...feedback,
 			...presets,
 			...variables,
-			...upgrades
-		});;
-
-		this.addUpgradeScripts();
+		});
 
 		this.PRESETS_STATES = [
 			{ action: 'bright',    group: 'Brightness',     label: 'Brightness\\n\\n@ ', choices: [{id: 0, label: '0'}, {id: 127, label: '127'}, {id: 255, label: '255'}] },
@@ -74,6 +68,10 @@ class instance extends instance_skel {
 		this.setupFields();
 
 		this.actions(); // export actions
+	}
+
+	static GetUpgradeScripts() {
+		return upgradeScripts
 	}
 
 	/**
@@ -279,9 +277,6 @@ class instance extends instance_skel {
 	 * @since 1.0.0
 	 */
 	init() {
-		debug = this.debug;
-		log = this.log;
-
 		this.initVariables();
 		this.initFeedbacks();
 		this.initPresets();
