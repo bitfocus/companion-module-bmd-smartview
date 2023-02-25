@@ -209,7 +209,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 
 			// separate buffered stream into lines with responses
 			this.socket.on('data', (chunk) => {
-				var i = 0,
+				let i = 0,
 					line = '',
 					offset = 0
 				receivebuffer += chunk
@@ -223,11 +223,11 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 						this.sendNextCommand()
 					} else if (line.match(/ACK/)) {
 						if (this.commandQueue.length > 0) {
-							var echo = this.commandQueue.shift()
+							let echo = this.commandQueue.shift()
 							echo = echo.split('\n')
 
 							if (echo.length > 1) {
-								var cmd = echo.shift().trim().split(/:/)[0]
+								let cmd = echo.shift().trim().split(/:/)[0]
 								this.processSmartviewInformation(cmd, echo)
 							}
 
@@ -247,7 +247,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 				} else if (this.command !== null && line.length > 0) {
 					this.stash.push(line.trim())
 				} else if (line.length === 0 && this.command !== null) {
-					var cmd = this.command.trim().split(/:/)[0]
+					let cmd = this.command.trim().split(/:/)[0]
 
 					this.processSmartviewInformation(cmd, this.stash)
 
@@ -366,11 +366,11 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 * @since 1.1.0
 	 */
 	updateDevice(labeltype, object) {
-		for (var key in object) {
-			var parsethis = object[key]
-			var a = parsethis.split(/: /)
-			var attribute = a.shift()
-			var value = a.join(' ')
+		for (let key in object) {
+			let parsethis = object[key]
+			let a = parsethis.split(/: /)
+			let attribute = a.shift()
+			let value = a.join(' ')
 
 			switch (attribute) {
 				case 'Model':
@@ -401,13 +401,13 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 * @since 1.1.0
 	 */
 	updateMonitor(labeltype, object) {
-		var monitor = this.getMonitor(labeltype)
+		let monitor = this.getMonitor(labeltype)
 
-		for (var key in object) {
-			var parsethis = object[key]
-			var a = parsethis.split(/: /)
-			var attribute = a.shift()
-			var value = a.join(' ')
+		for (let key in object) {
+			let parsethis = object[key]
+			let a = parsethis.split(/: /)
+			let attribute = a.shift()
+			let value = a.join(' ')
 
 			switch (attribute) {
 				case 'Brightness':

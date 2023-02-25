@@ -8,7 +8,7 @@
  * @since 1.1.0
  */
 export function getValue(base, offset) {
-	var out = base + offset
+	let out = base + offset
 
 	if (out > 255) {
 		out = 255
