@@ -11,6 +11,7 @@ export function updateFeedbacks() {
 	let feedbacks = {}
 
 	feedbacks['bright'] = {
+		type: 'boolean',
 		name: 'Change background color by monitor brightness',
 		description: 'If the selected monitor has the brightness specified, change background color of the bank',
 		style: {
@@ -29,6 +30,7 @@ export function updateFeedbacks() {
 
 	if (this.config.ver != 'smView4K') {
 		feedbacks['cont'] = {
+			type: 'boolean',
 			name: 'Change background color by monitor contrast',
 			description: 'If the selected monitor has the contrast specified, change background color of the bank',
 			style: {
@@ -45,6 +47,7 @@ export function updateFeedbacks() {
 			},
 		}
 		feedbacks['sat'] = {
+			type: 'boolean',
 			name: 'Change background color by monitor saturation',
 			description: 'If the selected monitor has the saturation specified, change background color of the bank',
 			style: {
@@ -63,6 +66,7 @@ export function updateFeedbacks() {
 	}
 
 	feedbacks['ident'] = {
+		type: 'boolean',
 		name: 'Change background color by monitor identify state',
 		description: 'If the selected monitor is currently identifying, change background color of the bank',
 		style: {
@@ -80,6 +84,7 @@ export function updateFeedbacks() {
 	}
 
 	feedbacks['border'] = {
+		type: 'boolean',
 		name: 'Change background color by monitor border color',
 		description: 'If the selected monitor has the border color defined, change background color of the bank',
 		style: {
@@ -98,6 +103,7 @@ export function updateFeedbacks() {
 
 	if (this.config.ver == 'smScope') {
 		feedbacks['scopeFunc'] = {
+			type: 'boolean',
 			name: 'Change background color by scope function',
 			description: 'If the selected monitor has the scope function active, change background color of the bank',
 			style: {
@@ -115,6 +121,7 @@ export function updateFeedbacks() {
 		}
 
 		feedbacks['audio'] = {
+			type: 'boolean',
 			name: 'Change background color by audio channels',
 			description: 'If the selected monitor has the audio channels active, change background color of the bank',
 			style: {
@@ -134,6 +141,7 @@ export function updateFeedbacks() {
 
 	if (this.config.ver == 'smView4K') {
 		feedbacks['lut'] = {
+			type: 'boolean',
 			name: 'Change background color by LUT',
 			description: 'If the selected monitor has the LUT action, change background color of the bank',
 			style: {
@@ -151,6 +159,7 @@ export function updateFeedbacks() {
 		}
 
 		feedbacks['input'] = {
+			type: 'boolean',
 			name: 'Change background color by input',
 			description: 'If the selected monitor has the input active, change background color of the bank',
 			style: {
