@@ -58,10 +58,12 @@ export function updatePresets() {
 							{
 								feedbackId: pv.action,
 								options: {
-									bg: combineRgb(255, 255, 0),
-									fg: combineRgb(0, 0, 0),
 									mon: monitor,
 									val: choice.id,
+								},
+								style: {
+									bgcolor: combineRgb(255, 255, 0),
+									color: combineRgb(0, 0, 0),
 								},
 							},
 						],
@@ -95,9 +97,11 @@ export function updatePresets() {
 						{
 							feedbackId: pv.action,
 							options: {
-								bg: combineRgb(255, 255, 0),
-								fg: combineRgb(0, 0, 0),
 								mon: monitor,
+							},
+							style: {
+								bgcolor: combineRgb(255, 255, 0),
+								color: combineRgb(0, 0, 0),
 							},
 						},
 					],
