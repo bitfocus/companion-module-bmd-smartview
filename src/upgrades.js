@@ -20,7 +20,7 @@ export function upgrade_v1_1_0(context, props) {
 
 	return {
 		updatedConfig: null,
-		updatedActions: [],
+		updatedActions: updateActions,
 		updatedFeedbacks: [],
 	}
 }
