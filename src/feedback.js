@@ -14,7 +14,7 @@ export function updateFeedbacks() {
 		type: 'boolean',
 		name: 'Change background color by monitor brightness',
 		description: 'If the selected monitor has the brightness specified, change background color of the bank',
-		style: {
+		defaultStyle: {
 			color: combineRgb(0, 0, 0),
 			bgcolor: combineRgb(255, 255, 0),
 		},
@@ -33,7 +33,7 @@ export function updateFeedbacks() {
 			type: 'boolean',
 			name: 'Change background color by monitor contrast',
 			description: 'If the selected monitor has the contrast specified, change background color of the bank',
-			style: {
+			defaultStyle: {
 				color: combineRgb(0, 0, 0),
 				bgcolor: combineRgb(255, 255, 0),
 			},
@@ -50,7 +50,7 @@ export function updateFeedbacks() {
 			type: 'boolean',
 			name: 'Change background color by monitor saturation',
 			description: 'If the selected monitor has the saturation specified, change background color of the bank',
-			style: {
+			defaultStyle: {
 				color: combineRgb(0, 0, 0),
 				bgcolor: combineRgb(255, 255, 0),
 			},
@@ -69,7 +69,7 @@ export function updateFeedbacks() {
 		type: 'boolean',
 		name: 'Change background color by monitor identify state',
 		description: 'If the selected monitor is currently identifying, change background color of the bank',
-		style: {
+		defaultStyle: {
 			color: combineRgb(0, 0, 0),
 			bgcolor: combineRgb(255, 255, 0),
 		},
@@ -87,7 +87,7 @@ export function updateFeedbacks() {
 		type: 'boolean',
 		name: 'Change background color by monitor border color',
 		description: 'If the selected monitor has the border color defined, change background color of the bank',
-		style: {
+		defaultStyle: {
 			color: combineRgb(0, 0, 0),
 			bgcolor: combineRgb(255, 255, 0),
 		},
@@ -106,7 +106,7 @@ export function updateFeedbacks() {
 			type: 'boolean',
 			name: 'Change background color by scope function',
 			description: 'If the selected monitor has the scope function active, change background color of the bank',
-			style: {
+			defaultStyle: {
 				color: combineRgb(0, 0, 0),
 				bgcolor: combineRgb(255, 255, 0),
 			},
@@ -124,7 +124,7 @@ export function updateFeedbacks() {
 			type: 'boolean',
 			name: 'Change background color by audio channels',
 			description: 'If the selected monitor has the audio channels active, change background color of the bank',
-			style: {
+			defaultStyle: {
 				color: combineRgb(0, 0, 0),
 				bgcolor: combineRgb(255, 255, 0),
 			},
@@ -144,7 +144,7 @@ export function updateFeedbacks() {
 			type: 'boolean',
 			name: 'Change background color by LUT',
 			description: 'If the selected monitor has the LUT action, change background color of the bank',
-			style: {
+			defaultStyle: {
 				color: combineRgb(0, 0, 0),
 				bgcolor: combineRgb(255, 255, 0),
 			},
@@ -162,7 +162,7 @@ export function updateFeedbacks() {
 			type: 'boolean',
 			name: 'Change background color by input',
 			description: 'If the selected monitor has the input active, change background color of the bank',
-			style: {
+			defaultStyle: {
 				color: combineRgb(0, 0, 0),
 				bgcolor: combineRgb(255, 255, 0),
 			},
