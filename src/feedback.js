@@ -20,11 +20,7 @@ export function updateFeedbacks() {
 		},
 		options: [this.MONITOR_FIELD, Fields.Level(255)],
 		callback: ({ options }) => {
-			if (this.getMonitor(options.mon).brightness == options.val) {
-				return true
-			} else {
-				return false
-			}
+			return this.getMonitor(options.mon).brightness == options.val
 		},
 	}
 
@@ -39,11 +35,7 @@ export function updateFeedbacks() {
 			},
 			options: [this.MONITOR_FIELD, Fields.Level(127)],
 			callback: ({ options }) => {
-				if (this.getMonitor(options.mon).contrast == options.val) {
-					return true
-				} else {
-					return false
-				}
+				return this.getMonitor(options.mon).contrast == options.val
 			},
 		}
 		feedbacks['sat'] = {
@@ -56,11 +48,7 @@ export function updateFeedbacks() {
 			},
 			options: [this.MONITOR_FIELD, Fields.Level(127)],
 			callback: ({ options }) => {
-				if (this.getMonitor(options.mon).saturation == options.val) {
-					return true
-				} else {
-					return false
-				}
+				return this.getMonitor(options.mon).saturation == options.val
 			},
 		}
 	}
@@ -75,11 +63,7 @@ export function updateFeedbacks() {
 		},
 		options: [this.MONITOR_FIELD],
 		callback: ({ options }) => {
-			if (this.getMonitor(options.mon).identify === true) {
-				return true
-			} else {
-				return false
-			}
+			return this.getMonitor(options.mon).identify === true
 		},
 	}
 
@@ -93,11 +77,7 @@ export function updateFeedbacks() {
 		},
 		options: [this.MONITOR_FIELD, Fields.Color],
 		callback: ({ options }) => {
-			if (this.getMonitor(options.mon).border == options.val) {
-				return true
-			} else {
-				return false
-			}
+			return this.getMonitor(options.mon).border == options.val
 		},
 	}
 
@@ -112,11 +92,7 @@ export function updateFeedbacks() {
 			},
 			options: [this.MONITOR_FIELD, Fields.ScopeType],
 			callback: ({ options }) => {
-				if (this.getMonitor(options.mon).scopeMode == options.val) {
-					return true
-				} else {
-					return false
-				}
+				return 	this.getMonitor(options.mon).scopeMode == options.val
 			},
 		}
 
@@ -130,11 +106,7 @@ export function updateFeedbacks() {
 			},
 			options: [this.MONITOR_FIELD, Fields.AudioChannel],
 			callback: ({ options }) => {
-				if (this.getMonitor(options.mon).audioChannel == options.val) {
-					return true
-				} else {
-					return false
-				}
+				return this.getMonitor(options.mon).audioChannel == options.val
 			},
 		}
 	}
@@ -150,11 +122,7 @@ export function updateFeedbacks() {
 			},
 			options: [this.MONITOR_FIELD, Fields.Lut],
 			callback: ({ options }) => {
-				if (this.getMonitor(options.mon).lut == options.val) {
-					return true
-				} else {
-					return false
-				}
+				return this.getMonitor(options.mon).lut == options.val
 			},
 		}
 
@@ -168,11 +136,7 @@ export function updateFeedbacks() {
 			},
 			options: [this.MONITOR_FIELD, Fields.Input],
 			callback: ({ options }) => {
-				if (this.getMonitor(options.mon).monitorInput == options.val) {
-					return true
-				} else {
-					return false
-				}
+				return this.getMonitor(options.mon).monitorInput == options.val
 			},
 		}
 	}

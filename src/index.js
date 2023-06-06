@@ -293,7 +293,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 */
 	queueCommand(cmd) {
 		if (cmd !== undefined) {
-			if (this.socket !== undefined && this.socket.connected) {
+			if (this.socket !== undefined && this.socket.isConnected) {
 				this.commandQueue.push(`${cmd}\n\n`)
 
 				if (this.cts === true) {
