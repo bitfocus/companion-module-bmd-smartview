@@ -1,7 +1,7 @@
 export function upgrade_v1_1_0(context, props) {
 	let updateActions = []
 	let upgradePass = (action) => {
-		switch (action.action) {
+		switch (action.actionId) {
 			case 'border':
 				if (action.options !== undefined && action.options.col !== undefined) {
 					action.options.val = action.options.col
