@@ -13,8 +13,8 @@ export function upgrade_v1_1_0(context, props) {
 	}
 
 	if (props.actions) {
-		for (let k in actions) {
-			upgradePass(actions[k])
+		for (let k in props.actions) {
+			upgradePass(props.actions[k])
 		}
 	}
 
