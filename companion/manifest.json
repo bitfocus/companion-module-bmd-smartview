@@ -1,4 +1,5 @@
 {
+	"$schema": "../node_modules/@companion-module/base/assets/manifest.schema.json",
 	"id": "bmd-smartview",
 	"name": "bmd-smartview",
 	"shortname": "smart",
@@ -22,5 +23,14 @@
 	},
 	"manufacturer": "Blackmagic Design",
 	"products": ["SmartView", "SmartScope"],
-	"keywords": ["Scope", "Monitor"]
+	"keywords": ["Scope", "Monitor"],
+	"bonjourQueries": {
+		"bonjourHost": {
+			"type": "blackmagic",
+			"protocol": "tcp",
+			"txt": {
+				"class": "SmartView"
+			}
+		}
+	}
 }

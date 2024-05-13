@@ -1,6 +1,6 @@
 {
 	"name": "bmd-smartview",
-	"version": "2.1.0",	"main": "src/index.js",
+	"version": "2.2.0",	"main": "src/index.js",
 	"type": "module",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
