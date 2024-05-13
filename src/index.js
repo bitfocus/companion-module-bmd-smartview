@@ -1,6 +1,7 @@
 import {
 	CreateConvertToBooleanFeedbackUpgradeScript,
 	InstanceBase,
+	InstanceStatus,
 	Regex,
 	runEntrypoint,
 	TCPHelper,
