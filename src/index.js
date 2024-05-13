@@ -237,7 +237,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 		}
 
 		if (target && target.port === undefined) {
-			self.log('info', 'Setting port to default')
+			this.log('info', 'Setting port to default')
 			target.port = 9992
 		}
 
