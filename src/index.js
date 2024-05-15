@@ -1,6 +1,7 @@
 import {
 	CreateConvertToBooleanFeedbackUpgradeScript,
 	InstanceBase,
+	InstanceStatus,
 	Regex,
 	runEntrypoint,
 	TCPHelper,
@@ -85,11 +86,27 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	getConfigFields() {
 		return [
 			{
+				type: 'bonjour-device',
+				id: 'bonjourHost',
+				label: 'Device',
+				width: 12,
+			},
+			{
 				type: 'textinput',
 				id: 'host',
 				label: 'Target IP',
 				width: 6,
+				isVisible: (options) => !options['bonjourHost'],
+				default: '',
 				regex: Regex.IP,
+			},
+			{
+				type: 'static-text',
+				id: 'host-filler',
+				width: 6,
+				label: '',
+				isVisible: (options) => !!options['bonjourHost'],
+				value: '',
 			},
 			{
 				type: 'static-text',
@@ -108,6 +125,37 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 				default: 'smView',
 			},
 		]
+	}
+
+	/**
+	 * INTERNAL: returns the IP and port from the Bonjour host.
+	 *
+	 * @returns {Object} the IP and port object
+	 * @access protected
+	 * @since 2.2.0
+	 */
+	parseIpAndPort() {
+		// TODO: Switch to Regex.IP when we can convert that into a RegExp object... (it will need some processing)
+		const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+
+		if (this.config.bonjourHost) {
+			const [ip, rawPort] = this.config.bonjourHost.split(':')
+			const port = Number(rawPort)
+			if (ip.match(ipRegex) && !isNaN(port)) {
+				return {
+					ip,
+					port,
+				}
+			}
+		} else if (this.config.host) {
+			if (this.config.host.match(ipRegex)) {
+				return {
+					ip: this.config.host,
+					port: undefined,
+				}
+			}
+		}
+		return null
 	}
 
 	/**
@@ -182,18 +230,20 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 */
 	initTCP() {
 		this.receiveBuffer = ''
+		let target = this.parseIpAndPort()
 
 		if (this.socket !== undefined) {
 			this.socket.destroy()
 			delete this.socket
 		}
 
-		if (this.config.port === undefined) {
-			this.config.port = 9992
+		if (target && target.port === undefined) {
+			this.log('info', 'Setting port to default')
+			target.port = 9992
 		}
 
-		if (this.config.host) {
-			this.socket = new TCPHelper(this.config.host, this.config.port)
+		if (target && target.ip) {
+			this.socket = new TCPHelper(target.ip, target.port)
 
 			this.socket.on('status_change', (status, message) => {
 				this.updateStatus(status, message)
@@ -258,6 +308,9 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 					this.log('debug', 'weird response from smartview', line, line.length)
 				}
 			})
+		} else {
+			this.log('error', 'Didn\'t get a target to connect to')
+			this.updateStatus(InstanceStatus.Disconnected)
 		}
 	}
 
