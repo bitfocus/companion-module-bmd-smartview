@@ -5,7 +5,7 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@companion-module/base@npm:^1.8.0":
+"@companion-module/base@npm:^1.13.6":
   version: 1.14.1
   resolution: "@companion-module/base@npm:1.14.1"
   dependencies:
@@ -472,7 +472,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bmd-smartview@workspace:."
   dependencies:
-    "@companion-module/base": "npm:^1.8.0"
+    "@companion-module/base": "npm:^1.13.6"
     "@companion-module/tools": "npm:^2.5.0"
     prettier: "npm:^3.8.0"
   languageName: unknown

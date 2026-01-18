@@ -1,10 +1,14 @@
 {
 	"name": "bmd-smartview",
-	"version": "2.2.0",	"main": "src/index.js",
+	"version": "2.2.0",
+	"main": "src/index.js",
 	"type": "module",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"format": "prettier --write ."
+		"format": "prettier -w .",
+		"package": "companion-module-build",
+		"lint:raw": "eslint",
+		"lint": "yarn lint:raw ."
 	},
 	"repository": {
 		"type": "git",
@@ -16,7 +20,7 @@
 	},
 	"devDependencies": {
 		"@companion-module/tools": "^2.5.0",
-		"prettier": "^2.8.3"
+		"prettier": "^3.8.0"
 	},
 	"engines": {
 		"node": "^22.17"
