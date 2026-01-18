@@ -12,11 +12,15 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"@companion-module/base": "^1.8.0"
+		"@companion-module/base": "^1.13.6"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^1.5.0",
+		"@companion-module/tools": "^2.5.0",
 		"prettier": "^2.8.3"
 	},
-	"prettier": "@companion-module/tools/.prettierrc.json"
+	"engines": {
+		"node": "^22.17"
+	},
+	"prettier": "@companion-module/tools/.prettierrc.json",
+	"packageManager": "yarn@4.12.0"
 }
