@@ -13,6 +13,8 @@ import { updateVariables } from './variables.js'
 import { BooleanFeedbackUpgradeMap, upgrade_v1_1_0 } from './upgrades.js'
 import { Choices } from './setup.js'
 
+const KA_INTERVAL = 30000
+
 /**
  * Companion instance class for the Blackmagic SmartView/SmartScope Monitors.
  *
@@ -27,6 +29,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 * @param {Object} internal - Companion internals
 	 * @since 1.0.0
 	 */
+
 	constructor(internal) {
 		super(internal)
 
@@ -73,7 +76,8 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 			this.socket.destroy()
 		}
 
-		this.log('debug', 'destroy', this.id)
+		this.log('debug', `destroy ${this.id}:${this.label}`)
+		this.killKeepAlive()
 	}
 
 	/**
@@ -253,8 +257,13 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 				this.log('error', 'Network error: ' + err.message)
 			})
 
+			this.socket.on('end', () => {
+				this.killKeepAlive()
+			})
+
 			this.socket.on('connect', () => {
 				this.log('debug', 'Connected')
+				this.startKeepAlive()
 			})
 
 			// separate buffered stream into lines with responses
@@ -309,7 +318,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 				}
 			})
 		} else {
-			this.log('error', 'Didn\'t get a target to connect to')
+			this.log('error', "Didn't get a target to connect to")
 			this.updateStatus(InstanceStatus.Disconnected)
 		}
 	}
@@ -368,9 +377,49 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 		if (this.commandQueue.length > 0) {
 			this.socket.send(this.commandQueue[0])
 			this.cts = false
+			this.startKeepAlive()
 		} else {
 			this.cts = true
 		}
+	}
+
+	/**
+	 * INTERNAL: clear keep alive timer
+	 *
+	 * @access protected
+	 * @since 2.2.1
+	 */
+
+	killKeepAlive() {
+		if (this.keep_alive_timer) {
+			clearTimeout(self.keep_alive_timer)
+			delete this.keep_alive_timer
+		}
+	}
+
+	/**
+	 * INTERNAL: Start keep alive timer
+	 *
+	 * @access protected
+	 * @since 2.2.1
+	 */
+
+	startKeepAlive() {
+		this.killKeepAlive()
+		this.keep_alive_timer = setTimeout(() => {
+			this.sendKeepAlive()
+		}, KA_INTERVAL)
+	}
+
+	/**
+	 * INTERNAL: Send keep alive message
+	 *
+	 * @access protected
+	 * @since 2.2.1
+	 */
+
+	sendKeepAlive() {
+		this.queueCommand('PING')
 	}
 
 	/**
