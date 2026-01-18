@@ -387,7 +387,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 * INTERNAL: clear keep alive timer
 	 *
 	 * @access protected
-	 * @since 2.2.1
+	 * @since 2.3.0
 	 */
 
 	killKeepAlive() {
@@ -401,7 +401,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 * INTERNAL: Start keep alive timer
 	 *
 	 * @access protected
-	 * @since 2.2.1
+	 * @since 2.3.0
 	 */
 
 	startKeepAlive() {
@@ -415,7 +415,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 * INTERNAL: Send keep alive message
 	 *
 	 * @access protected
-	 * @since 2.2.1
+	 * @since 2.3.0
 	 */
 
 	sendKeepAlive() {
