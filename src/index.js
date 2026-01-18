@@ -529,11 +529,11 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 					break
 				case 'Border':
 					monitor.border = value
-					this.checkFeedbacks('border')
+					this.checkFeedbacks('border', 'borderVal')
 					break
 				case 'ScopeMode':
 					monitor.scopeMode = value
-					this.checkFeedbacks('scopeFunc')
+					this.checkFeedbacks('scopeFunc', 'scopeFuncVal')
 					break
 				case 'AudioChannel':
 					monitor.audioChannel = value
@@ -545,7 +545,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 					break
 				case 'MonitorInput':
 					monitor.monitorInput = value
-					this.checkFeedbacks('input')
+					this.checkFeedbacks('input', 'inputVal')
 					break
 				case 'Identify':
 					monitor.identify = value == 'true'
