@@ -73,6 +73,15 @@ export function updateFeedbacks() {
 		},
 	}
 
+	feedbacks['borderVal'] = {
+		type: 'value',
+		name: 'Return current monitor border color',
+		options: [this.MONITOR_FIELD],
+		callback: ({ options }) => {
+			return this.getMonitor(options.mon).border
+		},
+	}
+
 	if (this.config.ver == 'smScope') {
 		feedbacks['scopeFunc'] = {
 			type: 'boolean',
@@ -82,6 +91,15 @@ export function updateFeedbacks() {
 			options: [this.MONITOR_FIELD, Fields.ScopeType],
 			callback: ({ options }) => {
 				return this.getMonitor(options.mon).scopeMode == options.val
+			},
+		}
+
+		feedbacks['scopeFuncVal'] = {
+			type: 'value',
+			name: 'Return the current scope function',
+			options: [this.MONITOR_FIELD],
+			callback: ({ options }) => {
+				return this.getMonitor(options.mon).scopeMode
 			},
 		}
 
@@ -95,6 +113,7 @@ export function updateFeedbacks() {
 				return this.getMonitor(options.mon).audioChannel == options.val
 			},
 		}
+
 	}
 
 	if (this.config.ver == 'smView4K') {
@@ -109,6 +128,7 @@ export function updateFeedbacks() {
 			},
 		}
 
+
 		feedbacks['input'] = {
 			type: 'boolean',
 			name: 'Change background color by input',
@@ -117,6 +137,15 @@ export function updateFeedbacks() {
 			options: [this.MONITOR_FIELD, Fields.Input],
 			callback: ({ options }) => {
 				return this.getMonitor(options.mon).monitorInput == options.val
+			},
+		}
+
+		feedbacks['inputVal'] = {
+			type: 'value',
+			name: 'Return current input',
+			options: [this.MONITOR_FIELD],
+			callback: ({ options }) => {
+				return this.getMonitor(options.mon).monitorInput
 			},
 		}
 	}
