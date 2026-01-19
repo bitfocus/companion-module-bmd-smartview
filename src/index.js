@@ -392,7 +392,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 
 	killKeepAlive() {
 		if (this.keep_alive_timer) {
-			clearTimeout(self.keep_alive_timer)
+			clearTimeout(this.keep_alive_timer)
 			delete this.keep_alive_timer
 		}
 	}
