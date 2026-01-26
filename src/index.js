@@ -13,6 +13,8 @@ import { updateVariables } from './variables.js'
 import { BooleanFeedbackUpgradeMap, upgrade_v1_1_0 } from './upgrades.js'
 import { Choices } from './setup.js'
 
+const KA_INTERVAL = 30000
+
 /**
  * Companion instance class for the Blackmagic SmartView/SmartScope Monitors.
  *
@@ -27,6 +29,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 * @param {Object} internal - Companion internals
 	 * @since 1.0.0
 	 */
+
 	constructor(internal) {
 		super(internal)
 
@@ -73,7 +76,8 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 			this.socket.destroy()
 		}
 
-		this.log('debug', 'destroy', this.id)
+		this.log('debug', `destroy ${this.id}:${this.label}`)
+		this.killKeepAlive()
 	}
 
 	/**
@@ -253,8 +257,13 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 				this.log('error', 'Network error: ' + err.message)
 			})
 
+			this.socket.on('end', () => {
+				this.killKeepAlive()
+			})
+
 			this.socket.on('connect', () => {
 				this.log('debug', 'Connected')
+				this.startKeepAlive()
 			})
 
 			// separate buffered stream into lines with responses
@@ -309,7 +318,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 				}
 			})
 		} else {
-			this.log('error', 'Didn\'t get a target to connect to')
+			this.log('error', "Didn't get a target to connect to")
 			this.updateStatus(InstanceStatus.Disconnected)
 		}
 	}
@@ -366,11 +375,51 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 */
 	sendNextCommand() {
 		if (this.commandQueue.length > 0) {
-			this.socket.send(this.commandQueue[0])
+			this.socket.send(this.commandQueue[0]).catch((err) => this.log('warn', `Failed to send command - ${err}`))
 			this.cts = false
+			this.startKeepAlive()
 		} else {
 			this.cts = true
 		}
+	}
+
+	/**
+	 * INTERNAL: clear keep alive timer
+	 *
+	 * @access protected
+	 * @since 2.3.0
+	 */
+
+	killKeepAlive() {
+		if (this.keep_alive_timer) {
+			clearTimeout(this.keep_alive_timer)
+			delete this.keep_alive_timer
+		}
+	}
+
+	/**
+	 * INTERNAL: Start keep alive timer
+	 *
+	 * @access protected
+	 * @since 2.3.0
+	 */
+
+	startKeepAlive() {
+		this.killKeepAlive()
+		this.keep_alive_timer = setTimeout(() => {
+			this.sendKeepAlive()
+		}, KA_INTERVAL)
+	}
+
+	/**
+	 * INTERNAL: Send keep alive message
+	 *
+	 * @access protected
+	 * @since 2.3.0
+	 */
+
+	sendKeepAlive() {
+		this.queueCommand('PING')
 	}
 
 	/**
@@ -480,11 +529,11 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 					break
 				case 'Border':
 					monitor.border = value
-					this.checkFeedbacks('border')
+					this.checkFeedbacks('border', 'borderVal')
 					break
 				case 'ScopeMode':
 					monitor.scopeMode = value
-					this.checkFeedbacks('scopeFunc')
+					this.checkFeedbacks('scopeFunc', 'scopeFuncVal')
 					break
 				case 'AudioChannel':
 					monitor.audioChannel = value
@@ -496,7 +545,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 					break
 				case 'MonitorInput':
 					monitor.monitorInput = value
-					this.checkFeedbacks('input')
+					this.checkFeedbacks('input', 'inputVal')
 					break
 				case 'Identify':
 					monitor.identify = value == 'true'
