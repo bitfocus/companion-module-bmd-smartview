@@ -14,13 +14,14 @@ const styles = {
 			bgcolor: combineRgb(255, 255, 0),
 		}
 }
+
 export function updateFeedbacks() {
 	let feedbacks = {}
 
 	feedbacks['bright'] = {
 		type: 'boolean',
-		name: 'Change background color by monitor brightness',
-		description: 'If the selected monitor has the brightness specified, change background color of the bank',
+		name: 'Brightness',
+		description: 'True if the selected monitor has the brightness specified',
 		defaultStyle: styles.blackOnYellow,
 		options: [this.MONITOR_FIELD, Fields.Level(255)],
 		callback: ({ options }) => {
@@ -31,8 +32,8 @@ export function updateFeedbacks() {
 	if (this.config.ver != 'smView4K') {
 		feedbacks['cont'] = {
 			type: 'boolean',
-			name: 'Change background color by monitor contrast',
-			description: 'If the selected monitor has the contrast specified, change background color of the bank',
+			name: 'Contrast',
+			description: 'True if the selected monitor has the contrast specified',
 			defaultStyle: styles.blackOnYellow,
 			options: [this.MONITOR_FIELD, Fields.Level(127)],
 			callback: ({ options }) => {
@@ -41,8 +42,8 @@ export function updateFeedbacks() {
 		}
 		feedbacks['sat'] = {
 			type: 'boolean',
-			name: 'Change background color by monitor saturation',
-			description: 'If the selected monitor has the saturation specified, change background color of the bank',
+			name: 'Saturation',
+			description: 'True if the selected monitor has the saturation specified',
 			defaultStyle: styles.blackOnYellow,
 			options: [this.MONITOR_FIELD, Fields.Level(127)],
 			callback: ({ options }) => {
@@ -53,8 +54,8 @@ export function updateFeedbacks() {
 
 	feedbacks['ident'] = {
 		type: 'boolean',
-		name: 'Change background color by monitor identify state',
-		description: 'If the selected monitor is currently identifying, change background color of the bank',
+		name: 'Identify state',
+		description: 'True if the selected monitor is currently identifying',
 		defaultStyle: styles.blackOnYellow,
 		options: [this.MONITOR_FIELD],
 		callback: ({ options }) => {
@@ -64,8 +65,8 @@ export function updateFeedbacks() {
 
 	feedbacks['border'] = {
 		type: 'boolean',
-		name: 'Change background color by monitor border color',
-		description: 'If the selected monitor has the border color defined, change background color of the bank',
+		name: 'Border color',
+		description: 'True if the selected monitor has the border color defined',
 		defaultStyle: styles.blackOnYellow,
 		options: [this.MONITOR_FIELD, Fields.Color],
 		callback: ({ options }) => {
@@ -75,7 +76,7 @@ export function updateFeedbacks() {
 
 	feedbacks['borderVal'] = {
 		type: 'value',
-		name: 'Return current monitor border color',
+		name: 'Border color - Value',
 		options: [this.MONITOR_FIELD],
 		callback: ({ options }) => {
 			return this.getMonitor(options.mon).border
@@ -85,8 +86,8 @@ export function updateFeedbacks() {
 	if (this.config.ver == 'smScope') {
 		feedbacks['scopeFunc'] = {
 			type: 'boolean',
-			name: 'Change background color by scope function',
-			description: 'If the selected monitor has the scope function active, change background color of the bank',
+			name: 'Scope function',
+			description: 'True if the selected monitor has the scope function active',
 			defaultStyle: styles.blackOnYellow,
 			options: [this.MONITOR_FIELD, Fields.ScopeType],
 			callback: ({ options }) => {
@@ -96,7 +97,7 @@ export function updateFeedbacks() {
 
 		feedbacks['scopeFuncVal'] = {
 			type: 'value',
-			name: 'Return the current scope function',
+			name: 'Scope function - Value',
 			options: [this.MONITOR_FIELD],
 			callback: ({ options }) => {
 				return this.getMonitor(options.mon).scopeMode
@@ -105,8 +106,8 @@ export function updateFeedbacks() {
 
 		feedbacks['audio'] = {
 			type: 'boolean',
-			name: 'Change background color by audio channels',
-			description: 'If the selected monitor has the audio channels active, change background color of the bank',
+			name: 'Audio channels',
+			description: 'True if the selected monitor has the audio channels active',
 			defaultStyle: styles.blackOnYellow,
 			options: [this.MONITOR_FIELD, Fields.AudioChannel],
 			callback: ({ options }) => {
@@ -119,8 +120,8 @@ export function updateFeedbacks() {
 	if (this.config.ver == 'smView4K') {
 		feedbacks['lut'] = {
 			type: 'boolean',
-			name: 'Change background color by LUT',
-			description: 'If the selected monitor has the LUT action, change background color of the bank',
+			name: 'LUT LUT',
+			description: 'True if the selected monitor has the LUT action',
 			defaultStyle: styles.blackOnYellow,
 			options: [this.MONITOR_FIELD, Fields.Lut],
 			callback: ({ options }) => {
@@ -131,8 +132,8 @@ export function updateFeedbacks() {
 
 		feedbacks['input'] = {
 			type: 'boolean',
-			name: 'Change background color by input',
-			description: 'If the selected monitor has the input active, change background color of the bank',
+			name: 'Input',
+			description: 'True if the selected monitor has the input active',
 			defaultStyle: styles.blackOnYellow,
 			options: [this.MONITOR_FIELD, Fields.Input],
 			callback: ({ options }) => {
@@ -142,7 +143,7 @@ export function updateFeedbacks() {
 
 		feedbacks['inputVal'] = {
 			type: 'value',
-			name: 'Return current input',
+			name: 'Input - Value',
 			options: [this.MONITOR_FIELD],
 			callback: ({ options }) => {
 				return this.getMonitor(options.mon).monitorInput
