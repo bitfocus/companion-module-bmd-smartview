@@ -375,7 +375,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 */
 	sendNextCommand() {
 		if (this.commandQueue.length > 0) {
-			this.socket.send(this.commandQueue[0])
+			this.socket.send(this.commandQueue[0]).catch((err) => this.log('warn', `Failed to send command - ${err}`))
 			this.cts = false
 			this.startKeepAlive()
 		} else {
