@@ -106,7 +106,7 @@ export function updateActions() {
 			name: 'Scope Function',
 			options: [this.MONITOR_FIELD, Fields.ScopeType],
 			callback: ({ options }) => {
-				let mon = this.getMonitor(options.mon)
+				// const mon = this.getMonitor(options.mon)
 				this.queueCommand(`${options.mon}\nScopeMode: ${options.val}`)
 			},
 		}

@@ -1,5 +1,6 @@
 {
 	"$schema": "../node_modules/@companion-module/base/assets/manifest.schema.json",
+	"type":"connection",
 	"id": "bmd-smartview",
 	"name": "bmd-smartview",
 	"shortname": "smart",
@@ -20,7 +21,7 @@
 	],
 	"legacyIds": [],
 	"runtime": {
-		"type": "node22",
+		"type": "node26",
 		"api": "nodejs-ipc",
 		"apiVersion": "0.0.0",
 		"entrypoint": "../src/index.js"
@@ -32,6 +33,7 @@
 		"bonjourHost": {
 			"type": "blackmagic",
 			"protocol": "tcp",
+			"addressFamily": "ipv4",
 			"txt": {
 				"class": "SmartView"
 			}

@@ -5,21 +5,21 @@
  * @since 1.1.0
  */
 export function updateVariables() {
-	let variables = []
+	let variables = {}
 
-	variables.push({ name: 'Monitor A Brightness', variableId: 'mon_a_brightness' })
+	variables['mon_a_brightness'] = { name: 'Monitor A Brightness' }
 
 	if (this.config.ver != 'smView4K') {
-		variables.push({ name: 'Monitor A Contrast', variableId: 'mon_a_contrast' })
-		variables.push({ name: 'Monitor A Saturation', variableId: 'mon_a_saturation' })
+		variables['mon_a_contrast'] = { name: 'Monitor A Contrast' }
+		variables['mon_a_saturation'] = { name: 'Monitor A Saturation' }
 	}
 
 	if (this.config.ver == 'smViewDuo' || this.config.ver == 'smScope') {
-		variables.push({ name: 'Monitor B Brightness', variableId: 'mon_b_brightness' })
+		variables['mon_b_brightness'] = { name: 'Monitor B Brightness' }
 
 		if (this.config.ver != 'smView4K') {
-			variables.push({ name: 'Monitor B Contrast', variableId: 'mon_b_contrast' })
-			variables.push({ name: 'Monitor B Saturation', variableId: 'mon_b_saturation' })
+			variables['mon_b_contrast'] = { name: 'Monitor B Contrast' }
+			variables['mon_b_saturation'] = { name: 'Monitor B Saturation' }
 		}
 	}
 

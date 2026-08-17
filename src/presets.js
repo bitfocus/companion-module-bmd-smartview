@@ -9,6 +9,14 @@ import { Presets } from './setup.js'
  */
 export function updatePresets() {
 	let presets = {}
+	let groups = {}
+
+	function addToGroup(groupName, presetId) {
+		if (!groups[groupName]) {
+			groups[groupName] = []
+		}
+		groups[groupName].push(presetId)
+	}
 
 	for (let monID in this.CHOICES_MONITOR) {
 		let monitor = this.CHOICES_MONITOR[monID].id
@@ -29,10 +37,10 @@ export function updatePresets() {
 			if (pv.choices != null) {
 				for (let id in pv.choices) {
 					let choice = pv.choices[id]
+					let presetId = `mon_${monitor}_${pv.action}_${choice.id}`
 
-					presets[`mon_${monitor}_${pv.action}_${choice.id}`] = {
-						type: 'button',
-						category: pv.group,
+					presets[presetId] = {
+						type: 'simple',
 						name: lbl + pv.label + choice.label,
 						style: {
 							text: lbl + pv.label + choice.label,
@@ -68,11 +76,14 @@ export function updatePresets() {
 							},
 						],
 					}
+
+					addToGroup(pv.group, presetId)
 				}
 			} else {
-				presets[`mon_${monitor}_${pv.action}`] = {
-					type: 'button',
-					category: pv.group,
+				let presetId = `mon_${monitor}_${pv.action}`
+
+				presets[presetId] = {
+					type: 'simple',
 					name: lbl + pv.label,
 					style: {
 						text: lbl + pv.label,
@@ -106,6 +117,8 @@ export function updatePresets() {
 						},
 					],
 				}
+
+				addToGroup(pv.group, presetId)
 			}
 		}
 
@@ -118,10 +131,10 @@ export function updatePresets() {
 
 			let varParts = pv.label.split('_')
 			let varLabel = lbl + varParts.join(variable)
+			let presetId = `mon_${monitor}_${pv.action}`
 
-			presets[`mon_${monitor}_${pv.action}`] = {
-				type: 'button',
-				category: pv.group,
+			presets[presetId] = {
+				type: 'simple',
 				name: varLabel,
 				style: {
 					text: varLabel,
@@ -145,8 +158,16 @@ export function updatePresets() {
 				],
 				feedbacks: [],
 			}
+
+			addToGroup(pv.group, presetId)
 		}
 	}
 
-	this.setPresetDefinitions(presets)
+	let structure = Object.keys(groups).map((groupName) => ({
+		id: groupName.toLowerCase().replace(/\s+/g, '-'),
+		name: groupName,
+		definitions: groups[groupName],
+	}))
+
+	this.setPresetDefinitions(structure, presets)
 }

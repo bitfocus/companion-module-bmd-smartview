@@ -3,7 +3,6 @@ import {
 	InstanceBase,
 	InstanceStatus,
 	Regex,
-	runEntrypoint,
 	TCPHelper,
 } from '@companion-module/base'
 import { updateActions } from './actions.js'
@@ -17,14 +16,18 @@ const KA_INTERVAL = 30000
 const KA_MESSAGE = 'PING'
 const CTS_TIMEOUT = 1000
 
+export const UpgradeScripts = [upgrade_v1_1_0, CreateConvertToBooleanFeedbackUpgradeScript(BooleanFeedbackUpgradeMap)]
+
 /**
  * Companion instance class for the Blackmagic SmartView/SmartScope Monitors.
  *
  * @extends InstanceBase
  * @since 1.0.0
  * @author Keith Rocheck <keith.rocheck@gmail.com>
+ *
  */
-class BlackmagicSmartviewInstance extends InstanceBase {
+
+export default class BlackmagicSmartviewInstance extends InstanceBase {
 	/**
 	 * Create an instance of a SmartView/SmartScope module.
 	 *
@@ -103,7 +106,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 				id: 'host',
 				label: 'Target IP',
 				width: 6,
-				isVisible: (options) => !options['bonjourHost'],
+				isVisibleExpression: '!$(options:bonjourHost)',
 				default: '',
 				regex: Regex.IP,
 			},
@@ -112,7 +115,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 				id: 'host-filler',
 				width: 6,
 				label: '',
-				isVisible: (options) => !!options['bonjourHost'],
+				isVisibleExpression: '!!$(options:bonjourHost)',
 				value: '',
 			},
 			{
@@ -273,8 +276,8 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 
 			// separate buffered stream into lines with responses
 			this.socket.on('data', (chunk) => {
-				let i = 0,
-					line = '',
+				let i,
+					line,
 					offset = 0
 				this.receiveBuffer += chunk
 
@@ -581,8 +584,3 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 		}
 	}
 }
-
-runEntrypoint(BlackmagicSmartviewInstance, [
-	upgrade_v1_1_0,
-	CreateConvertToBooleanFeedbackUpgradeScript(BooleanFeedbackUpgradeMap),
-])
