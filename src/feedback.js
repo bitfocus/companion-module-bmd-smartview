@@ -10,9 +10,9 @@ import { Fields } from './setup.js'
 
 const styles = {
 	blackOnYellow: {
-			color: combineRgb(0, 0, 0),
-			bgcolor: combineRgb(255, 255, 0),
-		}
+		color: combineRgb(0, 0, 0),
+		bgcolor: combineRgb(255, 255, 0),
+	},
 }
 
 export function updateFeedbacks() {
@@ -114,7 +114,6 @@ export function updateFeedbacks() {
 				return this.getMonitor(options.mon).audioChannel == options.val
 			},
 		}
-
 	}
 
 	if (this.config.ver == 'smView4K') {
@@ -128,7 +127,6 @@ export function updateFeedbacks() {
 				return this.getMonitor(options.mon).lut == options.val
 			},
 		}
-
 
 		feedbacks['input'] = {
 			type: 'boolean',

@@ -14,6 +14,8 @@ import { BooleanFeedbackUpgradeMap, upgrade_v1_1_0 } from './upgrades.js'
 import { Choices } from './setup.js'
 
 const KA_INTERVAL = 30000
+const KA_MESSAGE = 'PING'
+const CTS_TIMEOUT = 1000
 
 /**
  * Companion instance class for the Blackmagic SmartView/SmartScope Monitors.
@@ -78,6 +80,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 
 		this.log('debug', `destroy ${this.id}:${this.label}`)
 		this.killKeepAlive()
+		this.killCtsTimer()
 	}
 
 	/**
@@ -213,6 +216,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 		this.command = null
 		this.commandQueue = []
 		this.cts = false
+		this.cts_timer = undefined
 		this.deviceName = ''
 		this.monitors = {}
 
@@ -259,6 +263,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 
 			this.socket.on('end', () => {
 				this.killKeepAlive()
+				this.killCtsTimer()
 			})
 
 			this.socket.on('connect', () => {
@@ -374,12 +379,33 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 * @since 1.1.0
 	 */
 	sendNextCommand() {
+		this.killCtsTimer()
+
 		if (this.commandQueue.length > 0) {
 			this.socket.send(this.commandQueue[0]).catch((err) => this.log('warn', `Failed to send command - ${err}`))
-			this.cts = false
+			if (this.commandQueue[0] !== KA_MESSAGE) this.cts = false // Some devices don't respond to keep alive messages, so we don't want to wait for a response to those.
 			this.startKeepAlive()
+
+			this.cts_timer = setTimeout(() => {
+				this.log('debug', 'No response received for command, clearing to send')
+				this.cts = true
+				this.sendNextCommand()
+			}, CTS_TIMEOUT)
 		} else {
 			this.cts = true
+		}
+	}
+
+	/**
+	 * INTERNAL: clear the clear-to-send timeout timer
+	 *
+	 * @access protected
+	 * @since 2.3.1
+	 */
+	killCtsTimer() {
+		if (this.cts_timer) {
+			clearTimeout(this.cts_timer)
+			delete this.cts_timer
 		}
 	}
 
@@ -419,7 +445,7 @@ class BlackmagicSmartviewInstance extends InstanceBase {
 	 */
 
 	sendKeepAlive() {
-		this.queueCommand('PING')
+		this.queueCommand(KA_MESSAGE)
 	}
 
 	/**
