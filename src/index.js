@@ -448,7 +448,14 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 	 */
 
 	sendKeepAlive() {
-		this.queueCommand(KA_MESSAGE)
+		if (this.socket === undefined || !this.socket.isConnected || !this.cts || this.commandQueue.length > 0) {
+			return
+		}
+
+		// Some SmartView models do not acknowledge PING. It must never enter the
+		// command queue, otherwise an unanswered keepalive can block operator actions.
+		this.socket.send(`${KA_MESSAGE}\n\n`).catch((err) => this.log('warn', `Failed to send keepalive - ${err}`))
+		this.startKeepAlive()
 	}
 
 	/**
