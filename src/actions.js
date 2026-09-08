@@ -1,4 +1,4 @@
-import { Fields, getValue } from './setup.js'
+import { Fields, getMonitorInputCommand, getValue } from './setup.js'
 
 /**
  * INTERNAL: Get the available actions.
@@ -133,7 +133,7 @@ export function updateActions() {
 			name: 'Select Input',
 			options: [this.MONITOR_FIELD, Fields.Input],
 			callback: ({ options }) => {
-				this.queueCommand(`${options.mon}\nMonitorInput: ${options.val}`)
+				this.queueCommand(getMonitorInputCommand(options.mon, options.val))
 			},
 		}
 	}

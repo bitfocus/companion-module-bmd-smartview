@@ -19,6 +19,10 @@ export function getValue(base, offset) {
 	return out
 }
 
+export function getMonitorInputCommand(monitor, input) {
+	return `${monitor}\nMonitorInput: ${input}`
+}
+
 export const Choices = {
 	Model: [
 		{ id: 'smView', label: 'SmartView HD' },
@@ -46,6 +50,8 @@ export const Choices = {
 	Inputs: [
 		{ id: 'SDI A', label: 'SDI A' },
 		{ id: 'SDI B', label: 'SDI B' },
+		{ id: 'SDI 1', label: 'SDI 1 (numbered-input models)' },
+		{ id: 'SDI 2', label: 'SDI 2 (numbered-input models)' },
 		{ id: 'OPTICAL', label: 'OPTICAL' },
 	],
 	Luts: [
