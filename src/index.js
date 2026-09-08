@@ -15,6 +15,7 @@ import { Choices } from './setup.js'
 const KA_INTERVAL = 30000
 const KA_MESSAGE = 'PING'
 const CTS_TIMEOUT = 1000
+const IDENTIFY_INTERVAL = 15000
 
 export const UpgradeScripts = [upgrade_v1_1_0, CreateConvertToBooleanFeedbackUpgradeScript(BooleanFeedbackUpgradeMap)]
 
@@ -84,6 +85,9 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 		this.log('debug', `destroy ${this.id}:${this.label}`)
 		this.killKeepAlive()
 		this.killCtsTimer()
+		for (const monitor of Object.values(this.monitors)) {
+			if (monitor.identifyTimer) clearTimeout(monitor.identifyTimer)
+		}
 	}
 
 	/**
@@ -578,6 +582,19 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 					break
 				case 'Identify':
 					monitor.identify = value == 'true'
+					if (monitor.identifyTimer) {
+						clearTimeout(monitor.identifyTimer)
+						delete monitor.identifyTimer
+					}
+					if (monitor.identify) {
+						// The protocol reports the command acknowledgement but not the
+						// monitor's automatic end of the 15-second identify period.
+						monitor.identifyTimer = setTimeout(() => {
+							monitor.identify = false
+							delete monitor.identifyTimer
+							this.checkFeedbacks('ident')
+						}, IDENTIFY_INTERVAL)
+					}
 					this.checkFeedbacks('ident')
 					break
 			}
