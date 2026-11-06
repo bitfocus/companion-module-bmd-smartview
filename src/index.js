@@ -385,7 +385,7 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 		this.killCtsTimer()
 
 		if (this.commandQueue.length > 0) {
-			this.socket.send(this.commandQueue[0]).catch((err) => this.log('warn', `Failed to send command - ${err}`))
+			this.socket.send(this.commandQueue[0])
 			if (this.commandQueue[0] !== KA_MESSAGE) this.cts = false // Some devices don't respond to keep alive messages, so we don't want to wait for a response to those.
 			this.startKeepAlive()
 
