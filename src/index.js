@@ -15,6 +15,7 @@ import { Choices } from './setup.js'
 const KA_INTERVAL = 30000
 const KA_MESSAGE = 'PING'
 const CTS_TIMEOUT = 1000
+const IDENTIFY_TIMEOUT = 15000 // The unit stops identifying after 15 seconds without reporting it
 
 export const UpgradeScripts = [upgrade_v1_1_0, CreateConvertToBooleanFeedbackUpgradeScript(BooleanFeedbackUpgradeMap)]
 
@@ -84,6 +85,9 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 		this.log('debug', `destroy ${this.id}:${this.label}`)
 		this.killKeepAlive()
 		this.killCtsTimer()
+		for (const id of Object.keys(this.identifyTimers)) {
+			this.killIdentifyTimer(id)
+		}
 	}
 
 	/**
@@ -222,6 +226,7 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 		this.cts_timer = undefined
 		this.deviceName = ''
 		this.monitors = {}
+		this.identifyTimers = {}
 
 		this.setupFields()
 
@@ -413,6 +418,37 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 	}
 
 	/**
+	 * INTERNAL: clear a monitor's identify reset timer
+	 *
+	 * @param {string} id - the monitor id
+	 * @access protected
+	 * @since 3.0.1
+	 */
+	killIdentifyTimer(id) {
+		if (this.identifyTimers[id]) {
+			clearTimeout(this.identifyTimers[id])
+			delete this.identifyTimers[id]
+		}
+	}
+
+	/**
+	 * INTERNAL: clear a monitor's identify state once the unit has stopped identifying,
+	 * as it sends no message when it does
+	 *
+	 * @param {Object} monitor - the monitor object
+	 * @access protected
+	 * @since 3.0.1
+	 */
+	startIdentifyTimer(monitor) {
+		this.killIdentifyTimer(monitor.id)
+		this.identifyTimers[monitor.id] = setTimeout(() => {
+			delete this.identifyTimers[monitor.id]
+			monitor.identify = false
+			this.checkFeedbacks('ident')
+		}, IDENTIFY_TIMEOUT)
+	}
+
+	/**
 	 * INTERNAL: clear keep alive timer
 	 *
 	 * @access protected
@@ -578,6 +614,11 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 					break
 				case 'Identify':
 					monitor.identify = value == 'true'
+					if (monitor.identify) {
+						this.startIdentifyTimer(monitor)
+					} else {
+						this.killIdentifyTimer(monitor.id)
+					}
 					this.checkFeedbacks('ident')
 					break
 			}
