@@ -15,6 +15,15 @@ import { Choices } from './setup.js'
 const KA_INTERVAL = 30000
 const KA_MESSAGE = 'PING'
 const CTS_TIMEOUT = 1000
+const IDENTIFY_TIMEOUT = 15000 // The unit stops identifying after 15 seconds without reporting it
+
+/**
+ * A queued command on one line, for logging.
+ *
+ * @param {string} cmd - the queued command
+ * @returns {string} the command with its line breaks replaced
+ */
+const describeCommand = (cmd) => cmd.trim().replace(/\n+/g, ', ')
 
 export const UpgradeScripts = [upgrade_v1_1_0, CreateConvertToBooleanFeedbackUpgradeScript(BooleanFeedbackUpgradeMap)]
 
@@ -84,6 +93,9 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 		this.log('debug', `destroy ${this.id}:${this.label}`)
 		this.killKeepAlive()
 		this.killCtsTimer()
+		for (const id of Object.keys(this.identifyTimers)) {
+			this.killIdentifyTimer(id)
+		}
 	}
 
 	/**
@@ -222,6 +234,7 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 		this.cts_timer = undefined
 		this.deviceName = ''
 		this.monitors = {}
+		this.identifyTimers = {}
 
 		this.setupFields()
 
@@ -287,6 +300,12 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 
 					if (line.match(/Error/)) {
 						this.commandQueue.shift()
+						this.sendNextCommand()
+					} else if (line.trim() === 'NAK') {
+						const rejected = this.commandQueue.shift()
+						if (rejected !== undefined) {
+							this.log('warn', `Device did not understand command: ${describeCommand(rejected)}`)
+						}
 						this.sendNextCommand()
 					} else if (line.match(/ACK/)) {
 						if (this.commandQueue.length > 0) {
@@ -385,13 +404,18 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 		this.killCtsTimer()
 
 		if (this.commandQueue.length > 0) {
-			this.socket.send(this.commandQueue[0]).catch((err) => this.log('warn', `Failed to send command - ${err}`))
-			if (this.commandQueue[0] !== KA_MESSAGE) this.cts = false // Some devices don't respond to keep alive messages, so we don't want to wait for a response to those.
+			this.socket.send(this.commandQueue[0])
+			this.cts = false
 			this.startKeepAlive()
 
+			// Give up on a command the device never answers, rather than resend it, or it holds
+			// up every command queued behind it
 			this.cts_timer = setTimeout(() => {
-				this.log('debug', 'No response received for command, clearing to send')
-				this.cts = true
+				delete this.cts_timer
+				const unanswered = this.commandQueue.shift()
+				if (unanswered !== undefined) {
+					this.log('warn', `No response from device to command, moving on: ${describeCommand(unanswered)}`)
+				}
 				this.sendNextCommand()
 			}, CTS_TIMEOUT)
 		} else {
@@ -410,6 +434,37 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 			clearTimeout(this.cts_timer)
 			delete this.cts_timer
 		}
+	}
+
+	/**
+	 * INTERNAL: clear a monitor's identify reset timer
+	 *
+	 * @param {string} id - the monitor id
+	 * @access protected
+	 * @since 3.0.1
+	 */
+	killIdentifyTimer(id) {
+		if (this.identifyTimers[id]) {
+			clearTimeout(this.identifyTimers[id])
+			delete this.identifyTimers[id]
+		}
+	}
+
+	/**
+	 * INTERNAL: clear a monitor's identify state once the unit has stopped identifying,
+	 * as it sends no message when it does
+	 *
+	 * @param {Object} monitor - the monitor object
+	 * @access protected
+	 * @since 3.0.1
+	 */
+	startIdentifyTimer(monitor) {
+		this.killIdentifyTimer(monitor.id)
+		this.identifyTimers[monitor.id] = setTimeout(() => {
+			delete this.identifyTimers[monitor.id]
+			monitor.identify = false
+			this.checkFeedbacks('ident')
+		}, IDENTIFY_TIMEOUT)
 	}
 
 	/**
@@ -448,7 +503,17 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 	 */
 
 	sendKeepAlive() {
-		this.queueCommand(KA_MESSAGE)
+		if (this.socket === undefined || !this.socket.isConnected) return
+
+		// Sent directly, never queued: some models (SmartView 4K) don't answer PING, and an
+		// unanswered command at the head of the queue holds up everything behind it. A reply
+		// normally arrives with the queue empty and is ignored; if a command was queued in the
+		// meantime, the reply is taken as that command's, which was already sent. While commands
+		// are queued the connection is busy anyway, and each one sent restarts this timer.
+		if (this.commandQueue.length === 0) {
+			this.socket.send(`${KA_MESSAGE}\n\n`)
+		}
+		this.startKeepAlive()
 	}
 
 	/**
@@ -578,6 +643,11 @@ export default class BlackmagicSmartviewInstance extends InstanceBase {
 					break
 				case 'Identify':
 					monitor.identify = value == 'true'
+					if (monitor.identify) {
+						this.startIdentifyTimer(monitor)
+					} else {
+						this.killIdentifyTimer(monitor.id)
+					}
 					this.checkFeedbacks('ident')
 					break
 			}
